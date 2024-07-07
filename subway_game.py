@@ -111,7 +111,7 @@ def play_subway(players:list):
                     speaked_station.append(answer)
                     print("통과")
             else:
-                incorrect_line = range(1,5).pop(line_num-1)
+                incorrect_line = [range(1,5)].pop(line_num-1)
                 answer = random.choice(line_list[random.choice(incorrect_line)])
                 print(answer)
                 print(f'{line_num}호선에 그런 역은 없! 어! 요!')
