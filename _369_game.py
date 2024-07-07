@@ -144,14 +144,14 @@ def play_369(players):
             if expected is None:
                 if ('3' in str(number) or '6' in str(number) or '9' in str(number)) and response != '짝' * (str(number).count('3') + str(number).count('6') + str(number).count('9')):
                     print(f"{player.name}님이 졌습니다!")
-                    player.drink()
+                    player.drink(1)
                     display_players(players)
                     if player.is_intoxicated():
                         return
                     return
                 elif not ('3' in str(number) or '6' in str(number) or '9' in str(number)) and response != str(number):
                     print(f"{player.name}님이 졌습니다!")
-                    player.drink()
+                    player.drink(1)
                     display_players(players)
                     if player.is_intoxicated():
                         return
@@ -159,7 +159,7 @@ def play_369(players):
             else:
                 if response != expected:
                     print(f"{player.name}님이 졌습니다!")
-                    player.drink()
+                    player.drink(1)
                     display_players(players)
                     if player.is_intoxicated():
                         return

@@ -11,12 +11,12 @@ class Person:
 
     def measure_drink(self):
         return f"{self.name}의 주량은 {self.max_alcohol}잔입니다."
-
+    
+    def drinks_left(self):
+        return self.max_alcohol - self.current_drinks
+    
     def drink(self, amount):
         self.current_drinks += amount
-        # if self.current_drinks >= self.max_alcohol:
-        #     print(f"{self.name}이(가) 전사했습니다... 꿈나라에서는 편히 쉬시길..zzz")
-        # else:
         return f"{self.name}은(는) 지금까지 {self.current_drinks}잔 마셨습니다! 치사량까지 {self.max_alcohol - self.current_drinks}잔 남았습니다."
     
     def is_intoxicated(self):
@@ -45,8 +45,11 @@ class Game:
     def play_game(self):
         print(f'{self.players[0].name}이(가) 좋아하는 랜덤 게임~ 랜덤 게임~ 무슨 게임? ', end = "")
         while True:
-            try:
+            if self.players[0].is_user:
                 game_choice = int(input())
+            else:
+                game_choice = random.randint(1,4)
+            try:
                 if game_choice == 1:
                     self.play_subway()
                     return
@@ -80,13 +83,14 @@ def intro():
     print("게임을 진행할까요? (y/n)")
     choice = input().strip().lower()
     if choice == 'y':
-        return True
+        return False
     elif choice == 'n':
         print("게임이 종료되었습니다.")
         sys.exit()
-        return
+        return True
     else:
         print("잘못된 입력입니다. 'y' 또는 'n'을 입력해주세요.")
+        return True
 
 # 플레이어 수 결정 함수
 def num_players():
@@ -113,7 +117,8 @@ def show_game_list():
 def main_game():
 
     # 1. 게임 할까말까 여부    
-    intro()
+    while intro():
+        print("")
 
     # 2. 사용자(주인공) 이름 받기
     player_name = input("😵오늘 첫 차 탈 당신의 이름은?😵   ")
@@ -188,10 +193,10 @@ def main_game():
                     sys.exit()
                 else:
                     # 다음 플레이어 설정
-                    next_player_index = random.randint(1,len(gamers))
+                    next_player_index = random.randint(1,len(gamers)-1)
                     starter = gamers.pop(next_player_index)
                     gamers.insert(0,starter)
-                    continue
+                    break
 
 if __name__ == "__main__":
     main_game()
