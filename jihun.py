@@ -33,17 +33,6 @@ class Person:
 #     print(f"{person.name}이 선아 게임을 하고 있습니다.")
 #     return person.drink(1)
 
-def num_players():
-    while True:
-        try:
-            num = int(input().strip())
-            if 0 <= num_players <= 3:
-                return num
-            else:
-                print("0에서 3사이의 숫자를 입력하세요.")
-        except ValueError:
-            print("올바른 숫자를 입력하세요.")
-
 
 # 게임 선택 함수
 # def play_game(person, game_name):
@@ -70,6 +59,20 @@ def intro():
         return
     else:
         print("잘못된 입력입니다. 'y' 또는 'n'을 입력해주세요.")
+
+# 플레이어 수 결정 함수
+def num_players():
+    while True:
+        try:
+            num = int(input("함께 취할 친구들은 얼마나 필요하신가요? (최대 3명)  "))
+            if 0 <= num <= 3:
+                return num
+            else:
+                print("0에서 3사이의 숫자를 입력하세요.")
+        except ValueError:
+            print("올바른 숫자를 입력하세요.")
+
+
 
 # 메인 게임 로직
 def main_game():
@@ -114,7 +117,7 @@ def main_game():
     player4 = Person("선아", random.choice(capacity))
 
     players = [player1, player2, player3, player4]
-    opponents = random.choice(players, num_players())
+    opponents = random.sample(players, k = num_players())
     
     #4-2. 게임 멤버들 소개
     for opponent in opponents:
