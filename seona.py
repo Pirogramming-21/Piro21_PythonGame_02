@@ -1,117 +1,236 @@
+#main은 예원님의 코드 + 1번에 updown 게임 넣어놓음, 컴퓨터 플레이어 우리 이름으로 수정
 import random
 
-class Person:
-    def __init__(self, name, max_alcohol):
+class Player:
+    def __init__(self, name, capacity, is_user=False):
         self.name = name
-        self.max_alcohol = max_alcohol
+        self.capacity = capacity
         self.current_drinks = 0
+        self.is_user = is_user
 
-    def measure_drink(self):
-        return f"{self.name}의 주량은 {self.max_alcohol}잔입니다."
+    def drink(self):
+        self.current_drinks += 1
 
-    def drink(self, amount):
-        self.current_drinks += amount
-        if self.current_drinks >= self.max_alcohol:
-            return f"{self.name}이(가) 전사했습니다... 꿈나라에서는 편히 쉬시길..zzz"
+    def drinks_left(self):
+        return self.capacity - self.current_drinks
+
+    def is_intoxicated(self):
+        return self.current_drinks >= self.capacity
+
+    def make_move(self, number):
+        if self.is_user:
+            return input(f"{self.name}: ").strip()
         else:
-            return f"{self.name}은(는) 지금까지 {self.current_drinks}잔 마셨습니다! 치사량까지 {self.max_alcohol - self.current_drinks}잔 남았습니다."
+            return self.auto_move(number)
 
-# 각 게임별 함수 정의
-def game_jh(person):
-    print(f"{person.name}이 지훈 게임을 하고 있습니다.")
-    return person.drink(1)
+    def auto_move(self, number):
+        if '3' in str(number) or '6' in str(number) or '9' in str(number):
+            clap_count = str(number).count('3') + str(number).count('6') + str(number).count('9')
+            return '짝' * clap_count
+        else:
+            return str(number)
 
-def game_yw(person):
-    print(f"{person.name}이 예원 게임을 하고 있습니다.")
-    return person.drink(1)
-
-def game_hh(person):
-    print(f"{person.name}이 화현 게임을 하고 있습니다.")
-    return person.drink(1)
-
-def game_sa(person):
-    print(f"{person.name}이 선아 게임을 하고 있습니다.")
-    return person.drink(1)
-
-# 게임 선택 함수
-def play_game(person, game_name):
-    if game_name == "1": # 1 == 지훈 게임
-        return game_jh(person)
-    elif game_name == "2": # 2 == 예원 게임
-        return game_yw(person)
-    elif game_name == "3": # 3 == 화현 게임
-        return game_hh(person)
-    elif game_name == "4": # 4 == 선아 게임
-        return game_sa(person)
+def intro():
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("                    □□□□□■■□□□□□□□□□□□□■■□■□□□■■■■■□□■■ ")
+    print("                    □□□□■■■■□□□□□■■■■■□■■□■□□■■■■■■■□■■ ")
+    print("                    □□■■■■■■■■□□□□□□■■□■■□■□□■■□□□■■□■■")
+    print("                    □■■■■□□■■■■□□□□□■■□■■□■□□■■□□□■■□■■")
+    print("                    □□□□□□□□□□□□□□□□■■■■■□■□□■■■■■■■□■■")
+    print("                    ■■■■■■■■■■■■□□□■■■□■■□■□□□■■■■■□□■■")
+    print("                    □□□□□■■□□□□□□□■■■□□■■□■□□□□□□□□□□□□")
+    print("                    □□■■■■■■■■□□□■■■□□□■■□■□□□□■■■■■■■■")
+    print("                    □□□□□□□□□■□□■■■□□□□■■□■□□□□■□□□□□■■")
+    print("                    □□■■■■■■■■□□□□□□□□□■■□■□□□□■□□□□□■■")
+    print("                    □□■■□□□□□□□□□□□□□□□■■□■□□□□■□□□□□■■")
+    print("                    □□■■■■■■■■■□□□□□□□□■■□■□□□□■■■■■■■■")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("        🍤안주🍤 먹을 시간이 없어요~❌ 마시면서 배우는 🍻 술❗게❗임❗🍻")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("🍻🎼소주 한 잔 할래요~~🎼🍻(y/n)")
+    choice = input().strip().lower()
+    if choice == 'y':
+        return True
     else:
-        return "알 수 없는 게임입니다."
+        print("게임이 종료되었습니다.")
+        return False
 
-# 메인 게임 로직
-def main_game():
-    player_name = input("오늘 거하게 취해볼 당신의 이름은? : ")
-    player_alcohol = int(input("당신의 치사량(주량)은 얼마만큼인가요?(1~5를 선택해주세요): "))
-    player = Person(player_name, player_alcohol)
-    
-    # 친구 수 입력 예외 처리
+def get_user_info():
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    name = input("😵오늘 첫 차 탈 당신의 이름은?😵").strip()
+    while True:
+        print("~~~~~~~~~~~~~~~~~~~~~~🥃소주 기준 당신의 주량(치사량)은?🥃~~~~~~~~~~~~~~~~~~~~~~~~")
+        print("                                🥃 1. 2잔")
+        print("                                🥃 2. 4잔")
+        print("                                🥃 3. 1병")
+        print("                                🥃 4. 1병 반")
+        print("                                🥃 5. 2병")
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print("위의 선택지에서 숫자를 선택하세요")
+        try:
+            capacity_choice = int(input().strip())
+            if capacity_choice in [1, 2, 3, 4, 5]:
+                capacities = [2, 4, 6, 8, 9]
+                return name, capacities[capacity_choice - 1]
+            else:
+                print("1~5 중 하나를 선택해주세요.")
+        except ValueError:
+            print("1~5 중 하나를 선택해주세요.")
+
+def invite_players():
+    player_names = ["선아", "지훈", "예원", "화현"]
+    players = []
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("👨‍👩‍👧 몇 명을 초대하시겠습니까? (최대 3명) 👨‍👩‍👧")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     while True:
         try:
-            player_friends = int(input("함께 취할 친구들은 얼마나 필요하신가요?(사회적 거리두기로 인해 최대 3명까지 초대할 수 있어요!) : "))
-            if 1 <= player_friends <= 3:
+            num_players = int(input().strip())
+            if 0 <= num_players <= 3:
                 break
             else:
-                print("잘못된 입력입니다. 1부터 3 사이의 숫자를 입력해주세요.")
+                print("0에서 3 사이의 숫자를 입력하세요.")
         except ValueError:
-            print("숫자를 입력해주세요.")
+            print("올바른 숫자를 입력하세요.")
     
-    print(player.measure_drink())
+    random.shuffle(player_names)
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    for i in range(num_players):
+        name = player_names[i]
+        capacity = random.choice([2, 4, 6, 8, 9])
+        player = Player(name, capacity)
+        players.append(player)
+        print(f"🤗 안녕? 난 {name}(이)고, 내 주량은 🥃 {capacity}잔이야 🤗)")
 
-    # 대결할 사람 초대
-    possible_names = ["지훈", "예원", "화현", "선아"]
-    opponents = []
-    chosen_names = random.sample(possible_names, player_friends)
+    return players
 
-    for opponent_name in chosen_names:
-        opponent_alcohol = random.randint(2, 10)
-        opponents.append(Person(opponent_name, opponent_alcohol))
+def display_players(players):
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    for player in players:
+        print(f"🥃{player.name} 지금까지 마신 잔 수: 🥃 {player.current_drinks}잔 🥃 / 치사량까지 남은 잔 수: 🥃 {player.drinks_left()}잔 🥃")
 
-    # 현재까지 마신 잔 수와 치사량까지 남은 잔 수 출력
-    for opponent in opponents:
-        print(f"오늘 함께 취할 친구는 {opponent.name}입니다! (치사량 : {opponent.max_alcohol})")
+def show_game_list():
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~🎮 게임 리스트 🎮~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("1. up&down게임")
+    print("2. 게임2")
+    print("3. 게임3")
+    print("4. 게임4")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    
+    
+def play_updown(players):
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("                    Up & Down 게임을 시작합니다!")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    target = random.randint(1, 100)
 
-    # 게임 리스트 출력
-    game_list = ["1", "2", "3", "4"]
-    print("게임 리스트: 1. 지훈 게임, 2. 예원 게임, 3. 화현 게임, 4. 선아 게임")
-
-    # 게임 선택 및 실행
     while True:
-        game_choice = input("00이가 좋아하는 랜덤 게임~ 랜덤 게임~ 무슨 게임? (번호를 입력하세요): ")
-        result = play_game(player, game_choice)
-        print(result)
+        for player in players:
+            print(f"{player.name}님의 차례입니다.")
+            if player.is_user:
+                guess = input("1부터 100 사이의 숫자를 맞춰보세요: ")
+            else:
+                guess = str(random.randint(1, 100))
+                print(f"{player.name}: {guess}")
+
+            try:
+                guess = int(guess)
+                if guess < 1 or guess > 100:
+                    raise ValueError
+            except ValueError:
+                print("잘못된 입력입니다. 1부터 100 사이의 숫자를 입력하세요.")
+                continue
+
+            if guess == target:
+                print(f"정답입니다! {player.name}님이 벌칙을 받습니다!")
+                player.drink()
+                display_players(players)
+                if player.is_intoxicated():
+                    return
+                return  # 게임 종료 후 다른 게임으로 이동
+            elif guess < target:
+                print("Up!")
+            else:
+                print("Down!")
+
+
+
+def play_game(players):
+    while True:
+        display_players(players)
+        show_game_list()
+        try:
+            game_choice = int(input("게임을 선택하세요: ").strip())
+            if game_choice == 1:
+                play_updown(players)
+                break
+            else:
+                print("해당 게임은 아직 구현되지 않았습니다.")
+        except ValueError:
+            print("올바른 숫자를 입력하세요.")
+
+def random_game_choice():
+    return random.choice([1, 2, 3, 4])  # 1: Up & Down(선아 구현), 나머지 2, 3, 4
+
+def main():
+    if not intro():
+        return
+
+    user_name, user_capacity = get_user_info()
+    user = Player(user_name, user_capacity, is_user=True)
+    players = [user] + invite_players()
+    
+    while True:
+        display_players(players)
         
-        if player.current_drinks >= player.max_alcohol:
-            print(f"{player.name}이(가) 전사했습니다... 꿈나라에서는 편히 쉬시길..zzz")
+        current_player = random.choice(players)
+        
+        print(f"\n{current_player.name}님의 차례입니다.")
+        
+        if current_player.is_user:
+            show_game_list()
+            try:
+                game_choice = int(input("게임을 선택하세요: ").strip())
+                if game_choice in [1, 2, 3, 4]:
+                    if game_choice == 1:
+                        play_updown(players)
+                    else:
+                        print("해당 게임은 아직 구현되지 않았습니다.")
+                else:
+                    print("1에서 4 사이의 숫자를 입력하세요.")
+                    continue
+            except ValueError:
+                print("올바른 숫자를 입력하세요.")
+                continue
+        else:
+            print(f"{current_player.name}님이 게임을 랜덤으로 선택합니다.")
+            random_game = random_game_choice()
+            print(f"선택된 게임: {random_game}")
+            if random_game == 1:
+                play_updown(players)
+            else:
+                print("해당 게임은 아직 구현되지 않았습니다.")
+
+        # 게임 종료 조건 확인
+        intoxicated_players = [p for p in players if p.is_intoxicated()]
+        if intoxicated_players:
+            print("\n게임이 종료되었습니다!")
+            print("최종 결과:")
+            display_players(players)
+            for p in intoxicated_players:
+                print(f"{p.name}이(가) 전사했습니다...꿈나라에서는 편히 쉬시길...zzzz")
             return
+        
+        #처음부터 플레이어가 랜덤으로 선택되는 오류, 중복 선택 오류가 있음... 해결해주실 수 있는 천사 구해요
+        # 현재 플레이어를 제외한 나머지 플레이어들 중에서 다음 플레이어 선택(이 부분이 문제가 있는 것 같음)
+        remaining_players = [p for p in players if p != current_player]
+        if not remaining_players:  # 만약 모든 플레이어가 차례를 가졌다면 다시 전체 플레이어로 초기화
+            remaining_players = players
 
-        for opponent in opponents:
-            result = play_game(opponent, game_choice)
-            print(result)
-            
-            if opponent.current_drinks >= opponent.max_alcohol:
-                print(f"{opponent.name}이(가) 전사했습니다... 꿈나라에서는 편히 쉬시길..zzz")
-                return
-
-# 1) 게임 시작 여부를 묻는 코드 -> y를 누르면 main_game()으로 감
-game_start = input("게임을 진행할까요? (y/n) : ")
-if game_start.lower() == 'y': # 답변 대소문자 구분하지 않고 처리(lower)
-    print("게임을 시작합니다!")
-    main_game()
-elif game_start.lower() == 'n':
-    print("게임을 종료합니다.")
-else:
-    print("잘못된 입력입니다. 'y' 또는 'n'을 입력해주세요.")
-
+        print("\n다음 플레이어를 선택합니다.")
+        
 if __name__ == "__main__":
-    main_game()
+    main()
 
 
 
