@@ -1,10 +1,11 @@
 import random, sys
 
 class Person:
-    def __init__(self, name, max_alcohol):
+    def __init__(self, name, max_alcohol, is_user=False):
         self.name = name
         self.max_alcohol = max_alcohol
         self.current_drinks = 0
+        self.is_user = is_user
 
     def measure_drink(self):
         return f"{self.name}의 주량은 {self.max_alcohol}잔입니다."
@@ -16,36 +17,34 @@ class Person:
         else:
             return f"{self.name}은(는) 지금까지 {self.current_drinks}잔 마셨습니다! 치사량까지 {self.max_alcohol - self.current_drinks}잔 남았습니다."
 
-# 각 게임별 함수 정의
-# def game_jh(person):
-#     print(f"{person.name}이 지훈 게임을 하고 있습니다.")
-#     return person.drink(1)
+class Game:
+    def play_game(self,players):
+        while True:
+            try:
+                game_choice = int(input("게임을 선택하세요: ").strip())
+                if game_choice == 2:
+                    self.play_369(players)
+                    break
+                else:
+                    print("해당 게임은 아직 구현되지 않았습니다.")
+            except ValueError:
+                print("올바른 숫자를 입력하세요.")
 
-# def game_yw(person):
-#     print(f"{person.name}이 예원 게임을 하고 있습니다.")
-#     return person.drink(1)
+    def play_369(self, players):
+        print("")
 
-# def game_hh(person):
-#     print(f"{person.name}이 화현 게임을 하고 있습니다.")
-#     return person.drink(1)
+    def jh_game(self, players):
+        print("")
 
-# def game_sa(person):
-#     print(f"{person.name}이 선아 게임을 하고 있습니다.")
-#     return person.drink(1)
+    def hy_game(self, players):
+        print("")
+
+    def sunna_game(players):
+        print("")
 
 
-# 게임 선택 함수
-# def play_game(person, game_name):
-#     if game_name == "1": # 1 == 지훈 게임
-#         return game_jh(person)
-#     elif game_name == "2": # 2 == 예원 게임
-#         return game_yw(person)
-#     elif game_name == "3": # 3 == 화현 게임
-#         return game_hh(person)
-#     elif game_name == "4": # 4 == 선아 게임
-#         return game_sa(person)
-#     else:
-#         return "알 수 없는 게임입니다."
+
+
 
 # 인트로 함수
 def intro():
@@ -72,7 +71,13 @@ def num_players():
         except ValueError:
             print("올바른 숫자를 입력하세요.")
 
-
+# 게임 리스트 보여주는 함수
+def show_game_list():
+    print("게임 리스트")
+    print("1. 게임1")
+    print("2. 369 게임")
+    print("3. 게임3")
+    print("4. 게임4")
 
 # 메인 게임 로직
 def main_game():
@@ -94,20 +99,7 @@ def main_game():
     print(choice_list)
 
     player_alcohol = 2* int(input("당신의 치사량(주량)은 얼마만큼인가요?(1~5를 선택해주세요): "))
-    player = Person(player_name, player_alcohol)
-    
-    # 친구 수 입력 예외 처리
-    # while True:
-    #     try:
-    #         player_friends = int(input("함께 취할 친구들은 얼마나 필요하신가요?(사회적 거리두기로 인해 최대 3명까지 초대할 수 있어요!) : "))
-    #         if 1 <= player_friends <= 3:
-    #             break
-    #         else:
-    #             print("잘못된 입력입니다. 1부터 3 사이의 숫자를 입력해주세요.")
-    #     except ValueError:
-    #         print("숫자를 입력해주세요.")
-    
-    # print(player.measure_drink())
+    player = Person(player_name, player_alcohol, is_user=True)
 
     #4-1. 대결할 사람 초대
     capacity = [2,4,6,8,10]
@@ -124,11 +116,16 @@ def main_game():
         print(f"오늘 함께 취할 친구는 {opponent.name}입니다! (치사량 : {opponent.max_alcohol})")
 
     #4-3. 게임 리스트 출력
-    game_list = ["1", "2", "3", "4"]
-    print("게임 리스트: 1. 지훈 게임, 2. 예원 게임, 3. 화현 게임, 4. 선아 게임")
+    show_game_list()
 
+    #5. 게임 시작
+    
     # 게임 선택 및 실행
     while True:
+        # 게이머들 지정
+        gamers = [player].append(opponents)
+
+
         game_choice = input("00이가 좋아하는 랜덤 게임~ 랜덤 게임~ 무슨 게임? (번호를 입력하세요): ")
         result = play_game(player, game_choice)
         print(result)
@@ -144,16 +141,6 @@ def main_game():
             if opponent.current_drinks >= opponent.max_alcohol:
                 print(f"{opponent.name}이(가) 전사했습니다... 꿈나라에서는 편히 쉬시길..zzz")
                 return
-
-# 1) 게임 시작 여부를 묻는 코드 -> y를 누르면 main_game()으로 감
-# game_start = input("게임을 진행할까요? (y/n) : ")
-# if game_start.lower() == 'y': # 답변 대소문자 구분하지 않고 처리(lower)
-#     print("게임을 시작합니다!")
-#     main_game()
-# elif game_start.lower() == 'n':
-#     print("게임을 종료합니다.")
-# else:
-#     print("잘못된 입력입니다. 'y' 또는 'n'을 입력해주세요.")
 
 if __name__ == "__main__":
     main_game()
