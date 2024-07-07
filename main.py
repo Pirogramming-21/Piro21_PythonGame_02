@@ -17,8 +17,13 @@ class Person:
         # if self.current_drinks >= self.max_alcohol:
         #     print(f"{self.name}이(가) 전사했습니다... 꿈나라에서는 편히 쉬시길..zzz")
         # else:
-        print(f"{self.name}은(는) 지금까지 {self.current_drinks}잔 마셨습니다! 치사량까지 {self.max_alcohol - self.current_drinks}잔 남았습니다.")
+        return f"{self.name}은(는) 지금까지 {self.current_drinks}잔 마셨습니다! 치사량까지 {self.max_alcohol - self.current_drinks}잔 남았습니다."
     
+    def is_intoxicated(self):
+        if self.current_drinks >= self.max_alcohol:
+            return True
+        return False
+            
     def make_move(self, number):
         if self.is_user:
             return input(f"{self.name}: ").strip()
@@ -147,20 +152,46 @@ def main_game():
 
     # 마신 잔 수 및 치사량 출력    
     for gamer in gamers:
-        gamer.drink(0)
+        print(gamer.drink(0))
     
     #4-3. 게임 리스트 출력
-    show_game_list()
-
-    #5. 게임 시작
+    show_game_list()    
     
+    #5. 게임 시작    
     # 게임 선택 및 실행
     while True:
         # 게이머들 지정
         starter = gamers[0] # 게임 시작하는 사람
 
+        # 게임 시작!
         game = Game(gamers)
         game.play_game()
+
+        # 게임 후 플레이어들 마신 잔 수 및 남은 잔 수 출력
+        for gamer in gamers:
+            print(gamer.drink(0))
+
+        # 죽은 사람 있는지 확인
+        for gamer in gamers:
+            if gamer.is_intoxicated():
+                print("__________________________________________")
+                print("______________GAME OVER____________________")
+                print("__________________________________________")
+                print(f"{gamer.name}이(가) 전사했습니다... 꿈나라에서는 편히 쉬시길..zzz")
+            # 한판 더 할건지 여부 물어보기
+            else:
+                show_game_list()
+                print('술게임 진행중! 다른 사람의 턴입니다. 그만하고 싶으면 "exit"을, 계속하고 싶으면 아무키나 입력해 주세요!:  ', end = "")
+                end_yn = input().strip().lower()
+                if end_yn == "exit":
+                    print("즐거운 게임이었습니다!!!!")
+                    sys.exit()
+                else:
+                    # 다음 플레이어 설정
+                    next_player_index = random.randint(1,len(gamers))
+                    starter = gamers.pop(next_player_index)
+                    gamers.insert(0,starter)
+                    continue
 
 if __name__ == "__main__":
     main_game()

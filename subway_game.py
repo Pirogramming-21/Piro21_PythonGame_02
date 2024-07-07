@@ -90,6 +90,7 @@ def play_subway(players:list):
             else:
                 print(f'{line_num}호선에 그런 역은 없! 어! 요!')
                 print(f'누가 술을 마셔 {game_player.name}이(가) 술을 마셔 원샷!!')
+                game_player.drink(1)
                 break
 
         else:
@@ -115,4 +116,5 @@ def play_subway(players:list):
                 print(answer)
                 print(f'{line_num}호선에 그런 역은 없! 어! 요!')
                 print(f'누가 술을 마셔 {game_player.name}이(가) 술을 마셔 원샷!!')
+                game_player.drink(1)
                 break
