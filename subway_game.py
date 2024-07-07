@@ -40,7 +40,7 @@ import random
 
 
 
-def subway_game(players:list):
+def play_subway(players:list):
     print("___________________________________________")
     print("_______지하철 지하철 몇호선 몇호선___________")
     print("___________________________________________")
