@@ -63,13 +63,13 @@ def play_subway(players:list):
             except:
                 print("숫자를 입력해 주세요.")
     else:
-        line_num = random.randint(1,5)
+        line_num = random.randint(1,4)
 
     print(f'{line_num}호선 {line_num}호선')
     print("게임 시작!!!!")
 
     speaked_station = []
-
+    incorrect_line = [1,2,3,4].pop(line_num-1) # 올바르지 않은 호선들
     cnt = 0
 
     while True:
@@ -82,6 +82,7 @@ def play_subway(players:list):
             if answer in speaked_station:
                 print('집중은 생명! 집중은 생명!')
                 print(f'누가 술을 마셔 {game_player.name}이(가) 술을 마셔 원샷!!')
+                game_player.drink(1)
                 break
             elif answer in line_list[line_num-1]:
                 cnt +=1
@@ -95,24 +96,24 @@ def play_subway(players:list):
 
         else:
             # 확률생성기(1~10까지 숫자중 1~7이 나오면 해당 호선에 맞는 대답, 아니면 다른 호선 말하기)
-            random_num = random.randint(1,11)
+            random_num = random.randint(1,10)
 
             print(f'{game_player.name}:  ', end = "")
 
             if random_num <=7:
-                answer = random.choice(line_list[line_num])
+                answer = random.choice(line_list[line_num-1])
                 print(answer)
                 if answer in speaked_station:
                     print('집중은 생명! 집중은 생명!')
                     print(f'누가 술을 마셔 {game_player.name}이(가) 술을 마셔 원샷!!')
+                    game_player.drink(1)
                     break
                 else:
                     cnt +=1
                     speaked_station.append(answer)
                     print("통과")
             else:
-                incorrect_line = [range(1,5)].pop(line_num-1)
-                answer = random.choice(line_list[random.choice(incorrect_line)])
+                answer = random.choice(line_list[random.choice(incorrect_line)-1])
                 print(answer)
                 print(f'{line_num}호선에 그런 역은 없! 어! 요!')
                 print(f'누가 술을 마셔 {game_player.name}이(가) 술을 마셔 원샷!!')
