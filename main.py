@@ -58,9 +58,10 @@ class Game:
                     return
                 elif game_choice == 3:
                     self.play_updown()
-                    break
+                    return
                 elif game_choice == 4:
                     self.play_imground()
+                    return
                 else:
                     print("해당 게임은 아직 구현되지 않았습니다.")
             except ValueError:
@@ -139,12 +140,13 @@ def main_game():
 
     #4-1. 대결할 사람 초대
     capacity = [2,4,6,8,10]
-    player1 = Person("지훈", random.choice(capacity)) #주량 2,4,6,8,10 중 랜덤선택
-    player2 = Person("예원", random.choice(capacity))
-    player3 = Person("화현", random.choice(capacity))
-    player4 = Person("선아", random.choice(capacity))
+    player1 = Person("은서", random.choice(capacity)) #주량 2,4,6,8,10 중 랜덤선택
+    player2 = Person("하연", random.choice(capacity))
+    player3 = Person("연서", random.choice(capacity))
+    player4 = Person("예진", random.choice(capacity))
+    player5 = Person("헌도", random.choice(capacity))
 
-    players = [player1, player2, player3, player4]
+    players = [player1, player2, player3, player4, player5]
     opponents = random.sample(players, k = num_players())
     
     #4-2. 게임 멤버들 소개
@@ -176,14 +178,16 @@ def main_game():
         # 게임 후 플레이어들 마신 잔 수 및 남은 잔 수 출력
         for gamer in gamers:
             print(gamer.drink(0))
+            print(gamer.drinks_left())
 
         # 죽은 사람 있는지 확인
         for gamer in gamers:
-            if gamer.is_intoxicated():
+            if gamer.drinks_left() == 0:
                 print("__________________________________________")
                 print("______________GAME OVER____________________")
                 print("__________________________________________")
                 print(f"{gamer.name}이(가) 전사했습니다... 꿈나라에서는 편히 쉬시길..zzz")
+                sys.exit()
             # 한판 더 할건지 여부 물어보기
             else:
                 show_game_list()
