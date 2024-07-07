@@ -69,7 +69,8 @@ def play_subway(players:list):
     print("게임 시작!!!!")
 
     speaked_station = []
-    incorrect_line = [1,2,3,4].pop(line_num-1) # 올바르지 않은 호선들
+    incorrect_line = [1,2,3,4]
+    incorrect_line.pop(line_num-1) # 올바르지 않은 호선들
     cnt = 0
 
     while True:
@@ -113,7 +114,7 @@ def play_subway(players:list):
                     speaked_station.append(answer)
                     print("통과")
             else:
-                answer = random.choice(line_list[random.choice(incorrect_line)-1])
+                answer = random.choice(line_list[int(random.choice(incorrect_line))-1])
                 print(answer)
                 print(f'{line_num}호선에 그런 역은 없! 어! 요!')
                 print(f'누가 술을 마셔 {game_player.name}이(가) 술을 마셔 원샷!!')

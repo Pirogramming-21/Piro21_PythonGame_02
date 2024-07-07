@@ -58,6 +58,7 @@ class Game:
                     return
                 elif game_choice == 3:
                     self.play_updown()
+                    break
                 elif game_choice == 4:
                     self.play_imground()
                 else:
@@ -75,7 +76,7 @@ class Game:
         up_and_down_game.play_updown(self.players)
 
     def play_imground(self):
-        imground_game.game_ground(self.players)
+        subway_game.game_ground(self.players)
 
 
 # 인트로 함수
