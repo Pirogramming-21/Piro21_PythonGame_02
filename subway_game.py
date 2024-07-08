@@ -129,7 +129,7 @@ def play_subway(players:list):
                 else:
                     cnt +=1
                     speaked_station.append(answer)
-                    print("통과")
+                    print("⭕ 통과 ⭕")
             else:
                 answer = random.choice(line_list[int(random.choice(incorrect_line))-1])
                 print(answer)
