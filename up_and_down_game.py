@@ -2,7 +2,7 @@
 import random
 
 def play_updown(players):
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("""
              _    _  _____      ___    _   _  _____     _____      _____    __        __  __   __
             | |  | ||  __ \    / _ \  | \ | ||  __ \   |  __ \    /  __  \  \ \      / /  | \ | |
@@ -14,7 +14,7 @@ def play_updown(players):
                 """)
 
     print("                            Up & Down 게임을 시작합니다!")
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     target = random.randint(1, 100)
     used_numbers = set()
     lower_bound = 1
@@ -45,6 +45,7 @@ def play_updown(players):
                     return
                 guess = random.choice(available_numbers)
                 print(f"{player.name}: {guess}")
+                print("~~~~~~~~~~~~~~~~~~~~~~~")
 
             used_numbers.add(guess)
 
@@ -53,10 +54,10 @@ def play_updown(players):
                 player.drink(1)
                 return
             elif guess < target:
-                print("Up!")
+                print("🔼 Up! 🔼")
                 lower_bound = guess + 1
             else:
-                print("Down!")
+                print("🔽 Down! 🔽")
                 upper_bound = guess - 1
 
         if lower_bound > upper_bound:
