@@ -27,26 +27,29 @@ def play_apart(players):
     
     while True:
         for player in turns:
-            if player.is_user:
-                user_input = input(f"{player.name}, 몇 층?: ").strip()
-                if user_input.lower() == "종료":
-                    print("게임을 종료합니다.")
-                    return
-                try:
-                    floor = int(user_input)
-                    if floor != current_floor:
-                        print(f"잘못된 층수입니다. {current_floor}층을 외쳐야 합니다.")
+            while True:
+                if player.is_user:
+                    user_input = input(f"{player.name}, 몇 층?: ").strip()
+                    if user_input.lower() == "종료":
+                        print("게임을 종료합니다.")
+                        return
+                    try:
+                        floor = int(user_input)
+                        if floor != current_floor:
+                            print(f"잘못된 층수입니다. {current_floor}층을 외쳐야 합니다.")
+                            continue
+                    except ValueError:
+                        print(f"숫자를 입력하세요. {current_floor}층을 외쳐야 합니다.")
                         continue
-                except ValueError:
-                    print(f"숫자를 입력하세요. {current_floor}층을 외쳐야 합니다.")
-                    continue
-            else:
-                floor = current_floor
-                print(f"{player.name}, 몇 층?: {floor}")
-            
-            if floor == random_floor:
-                print(f"{player.name} 벌칙 당첨!")
-                player.drink(1)
-                return
-            
-            current_floor += 1
+                else:
+                    floor = current_floor
+                    print(f"{player.name}, 몇 층?: {floor}")
+                
+                if floor == random_floor:
+                    print(f"{player.name} 벌칙 당첨!")
+                    player.drink(1)
+                    return
+                
+                current_floor += 1
+                break
+
