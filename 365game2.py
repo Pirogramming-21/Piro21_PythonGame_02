@@ -1,3 +1,62 @@
+# import random
+
+# class Player:
+#     def __init__(self, name, is_user=False):
+#         self.name = name
+#         self.is_user = is_user
+
+#     def make_move(self, number):
+#         if self.is_user:
+#             return input(f"{self.name}: ").strip()
+#         else:
+#             return self.auto_move(number)
+    
+#     def auto_move(self, number):
+#         if random.random() < 0.3:  # 30% chance of providing an incorrect response
+#             return self.generate_incorrect_response(number)
+#         else:
+#             if '3' in str(number) or '6' in str(number) or '9' in str(number):
+#                 clap_count = str(number).count('3') + str(number).count('6') + str(number).count('9')
+#                 return '짝' * clap_count
+#             else:
+#                 return str(number)
+    
+#     def generate_incorrect_response(self, number):
+#         incorrect_number = random.randint(1, number + 10)  # Generate a random incorrect number
+#         return str(incorrect_number)
+
+# def play_369(players):
+#     number = 1
+#     while True:
+#         for player in players:
+#             expected = player.auto_move(number) if not player.is_user else None
+#             response = player.make_move(number)
+            
+#             # Output the response
+#             if not player.is_user:
+#                 print(f"{player.name}: {response}")
+            
+#             # Check for incorrect responses
+#             if not player.is_user and expected is not None and response != expected:
+#                 print(f"{player.name}님이 졌습니다!")
+#                 return
+            
+#             number += 1
+
+# if __name__ == "__main__":
+#     user_name = input("당신의 이름을 입력하세요: ").strip()
+#     user = Player(user_name, is_user=True)
+#     other_names = ["참가자 2", "참가자 3"]
+#     random.shuffle(other_names)
+#     other_players = [Player(name) for name in other_names]
+#     players = [user] + other_players
+#     random.shuffle(players)
+    
+#     play_369(players)
+    
+#     input("게임이 종료되었습니다. 엔터 키를 누르면 프로그램이 종료됩니다.")
+
+
 import random
 
 class Player:
@@ -6,7 +65,6 @@ class Player:
         self.capacity = capacity
         self.current_drinks = 0
         self.is_user = is_user
-        self.has_chosen_game = False
 
     def drink(self):
         self.current_drinks += 1
@@ -30,6 +88,12 @@ class Player:
         else:
             return str(number)
 
+    def random_incorrect_move(self, number):
+        if '3' in str(number) or '6' in str(number) or '9' in str(number):
+            return str(number)
+        else:
+            return '짝'
+
 def intro():
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("                    □□□□□■■□□□□□□□□□□□□■■□■□□□■■■■■□□■■ ")
@@ -41,7 +105,7 @@ def intro():
     print("                    □□□□□■■□□□□□□□■■■□□■■□■□□□□□□□□□□□□")
     print("                    □□■■■■■■■■□□□■■■□□□■■□■□□□□■■■■■■■■")
     print("                    □□□□□□□□□■□□■■■□□□□■■□■□□□□■□□□□□■■")
-    print("                    □□■■■■■■■■□□□□□□□□□■■□■□□□□■□□□□□■■")
+    print("                    □□■■■■■■■■■□□□□□□□□□■■□■□□□□■□□□□□■■")
     print("                    □□■■□□□□□□□□□□□□□□□■■□■□□□□■□□□□□■■")
     print("                    □□■■■■■■■■■□□□□□□□□■■□■□□□□■■■■■■■■")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
@@ -100,7 +164,7 @@ def invite_players():
         capacity = random.choice([2, 4, 6, 8, 9])
         player = Player(name, capacity)
         players.append(player)
-        print(f"🤗 안녕? 난 {name}(이)고, 내 주량은 🥃 {capacity}잔이야 🤗")
+        print(f"🤗 안녕? 난 {name}(이)고, 내 주량은 🥃 {capacity}잔이야 🤗)")
 
     return players
 
@@ -135,7 +199,11 @@ def play_369(players):
         for player in players:
             print(f"{player.name}님의 차례입니다.")
             expected = player.auto_move(number) if not player.is_user else None
-            response = player.make_move(number)
+            
+            if not player.is_user and random.random() < 0.3:
+                response = player.random_incorrect_move(number)
+            else:
+                response = player.make_move(number)
             
             # 출력
             if not player.is_user:
@@ -143,35 +211,32 @@ def play_369(players):
             
             # 응답 확인
             if expected is None:
-                if ('3' in str(number) or '6' in str(number) or '9' in str(number)) and response != '짝' * (str(number).count('3') + str(number).count('6') + str(number).count('9')):
+                if ('3' in str(number) or '6' in str(number) or '9') and response != '짝' * (str(number).count('3') + str(number).count('6') + str(number).count('9')):
                     print(f"{player.name}님이 졌습니다!")
-                    player.drink()
+                    player.drink(1)
                     display_players(players)
                     if player.is_intoxicated():
                         return
-                    return
-                elif not ('3' in str(number) or '6' in str(number) or '9') in str(number) and response != str(number):
+                elif not ('3' in str(number) or '6' in str(number) or '9') and response != str(number):
                     print(f"{player.name}님이 졌습니다!")
-                    player.drink()
+                    player.drink(1)
                     display_players(players)
                     if player.is_intoxicated():
                         return
-                    return
             else:
                 if response != expected:
                     print(f"{player.name}님이 졌습니다!")
-                    player.drink()
+                    player.drink(1)
                     display_players(players)
                     if player.is_intoxicated():
                         return
-                    return
             
             number += 1
 
 def play_game(players):
-    display_players(players)
-    show_game_list()
     while True:
+        display_players(players)
+        show_game_list()
         try:
             game_choice = int(input("게임을 선택하세요: ").strip())
             if game_choice == 2:
@@ -188,62 +253,35 @@ def random_game_choice():
 def main():
     if not intro():
         return
-    
+
     user_name, user_capacity = get_user_info()
     user = Player(user_name, user_capacity, is_user=True)
-    
-    players = invite_players()
-    players.append(user)  # 사용자를 플레이어 목록에 추가
+    players = [user] + invite_players()
 
-    round = 1
     while True:
-        # 1. 사용자가 먼저 게임을 선택합니다.
-        if not user.has_chosen_game:
-            print(f"{user.name}님이 게임을 선택합니다.")
-            play_game(players)
-            user.has_chosen_game = True
-
-        # 2. 나머지 초대받은 플레이어들 중 랜덤한 순서로 게임을 선택합니다.
-        player_queue = [player for player in players if not player.is_user and not player.has_chosen_game]
-        random.shuffle(player_queue)
-        for player in player_queue:
+        play_game(players)
+        for player in players:
             if player.is_intoxicated():
-                continue
-            print(f"{player.name}님이 게임을 선택합니다.")
-            game_choice = random_game_choice()
-            if game_choice == 2:
+                print(f"{player.name}님이 치사량에 도달했습니다!")
+                display_players(players)
+                print("게임이 종료되었습니다.")
+                return
+
+        non_user_players = [player for player in players if player != user]
+        random.shuffle(non_user_players)
+        for player in non_user_players:
+            print(f"{player.name}님의 차례입니다. 게임을 랜덤으로 선택합니다.")
+            random_game = random_game_choice()
+            print(f"선택된 게임: {random_game}")
+            if random_game == 2:
                 play_369(players)
-            player.has_chosen_game = True
+            else:
+                print("해당 게임은 아직 구현되지 않았습니다.")
+            if any(p.is_intoxicated() for p in players):
+                break
 
-        # 3. 게임을 선택하지 않은 플레이어들 중 랜덤한 순서로 게임을 선택합니다.
-        remaining_players = [player for player in players if not player.has_chosen_game]
-        random.shuffle(remaining_players)
-        for player in remaining_players:
-            if player.is_intoxicated():
-                continue
-            print(f"{player.name}님이 게임을 선택합니다.")
-            game_choice = random_game_choice()
-            if game_choice == 2:
-                play_369(players)
-            player.has_chosen_game = True
-
-        # 4. 모든 플레이어가 적어도 한 번씩 게임을 선택했다면, 이후에는 사용자 포함 모든 플레이어들이 랜덤한 순서로 게임을 선택합니다.
-        if all(player.has_chosen_game for player in players):
-            for player in players:
-                player.has_chosen_game = False
-            random.shuffle(players)
-            for player in players:
-                if player.is_intoxicated():
-                    continue
-                print(f"{player.name}님이 게임을 선택합니다.")
-                game_choice = random_game_choice()
-                if game_choice == 2:
-                    play_369(players)
-                player.has_chosen_game = True
-
-        # 모든 플레이어가 치사량에 도달했는지 확인
-        if all(player.is_intoxicated() for player in players):
-            print("모든 플레이어가 치사량에 도달했습니다. 게임이 종료됩니다.")
+        if any(p.is_intoxicated() for p in players):
+            print("게임이 종료되었습니다.")
             break
 
 if __name__ == "__main__":
