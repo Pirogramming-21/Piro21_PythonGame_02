@@ -20,20 +20,7 @@ class Person:
         return f"{self.name}은(는) 지금까지 {self.current_drinks}잔 마셨습니다! 치사량까지 {self.max_alcohol - self.current_drinks}잔 남았습니다."
     
     def is_intoxicated(self):
-        return self.current_drinks >= self.max_alcohol
-            
-    def make_move(self, number):
-        if self.is_user:
-            return input(f"{self.name}: ").strip()
-        else:
-            return self.auto_move(number)
-
-    def auto_move(self, number):
-        if '3' in str(number) or '6' in str(number) or '9' in str(number):
-            clap_count = str(number).count('3') + str(number).count('6') + str(number).count('9')
-            return '짝' * clap_count
-        else:
-            return str(number)
+        return self.current_drinks >= self.max_alcohol      
 
 # 게임 클래스 패키지
 class Game:
