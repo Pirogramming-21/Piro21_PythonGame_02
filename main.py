@@ -1,5 +1,5 @@
 import random, sys
-import up_and_down_game, imground_game, subway_game, _369_game
+import up_and_down_game, imground_game, subway_game, _369_game, apart_game
 
 # 사람 클래스 패키지
 class Person:
@@ -20,22 +20,7 @@ class Person:
         return f"{self.name}은(는) 지금까지 {self.current_drinks}잔 마셨습니다! 치사량까지 {self.max_alcohol - self.current_drinks}잔 남았습니다."
     
     def is_intoxicated(self):
-        if self.current_drinks >= self.max_alcohol:
-            return True
-        return False
-            
-    def make_move(self, number):
-        if self.is_user:
-            return input(f"{self.name}: ").strip()
-        else:
-            return self.auto_move(number)
-
-    def auto_move(self, number):
-        if '3' in str(number) or '6' in str(number) or '9' in str(number):
-            clap_count = str(number).count('3') + str(number).count('6') + str(number).count('9')
-            return '짝' * clap_count
-        else:
-            return str(number)
+        return self.current_drinks >= self.max_alcohol      
 
 # 게임 클래스 패키지
 class Game:
@@ -46,9 +31,16 @@ class Game:
         print(f'{self.players[0].name}이(가) 좋아하는 랜덤 게임~ 랜덤 게임~ 무슨 게임? ', end = "")
         while True:
             if self.players[0].is_user:
-                game_choice = int(input())
+                try:
+                    game_choice = input().strip()
+                    if not game_choice.isdigit():
+                        raise ValueError
+                    game_choice = int(game_choice)
+                except ValueError:
+                    print("올바른 숫자를 입력하세요.")
+                    continue
             else:
-                game_choice = random.randint(1,4)
+                game_choice = random.randint(1, 4)
             try:
                 if game_choice == 1:
                     self.play_subway()
@@ -61,6 +53,9 @@ class Game:
                     return
                 elif game_choice == 4:
                     self.play_imground()
+                    return
+                elif game_choice == 5:
+                    self.play_apart()
                     return
                 else:
                     print("해당 게임은 아직 구현되지 않았습니다.")
@@ -77,8 +72,10 @@ class Game:
         up_and_down_game.play_updown(self.players)
 
     def play_imground(self):
-        subway_game.play_subway(self.players)
+        imground_game.play_imground(self.players)
 
+    def play_apart(self):
+        apart_game.play_apart(self.players)
 
 # 인트로 함수
 def intro():
@@ -113,6 +110,7 @@ def show_game_list():
     print("2. 369 게임")
     print("3. Up & Down 게임")
     print("4. 아이엠그라운드 게임")
+    print("5. 아파트 게임")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
 # 메인 게임 로직
@@ -135,11 +133,11 @@ def main_game():
 
     print(choice_list)
 
-    player_alcohol = 2* int(input("당신의 치사량(주량)은 얼마만큼인가요?(1~5를 선택해주세요): "))
+    player_alcohol = 2 * int(input("당신의 치사량(주량)은 얼마만큼인가요?(1~5를 선택해주세요): "))
     player = Person(player_name, player_alcohol, is_user=True)
 
     #4-1. 대결할 사람 초대
-    capacity = [2,4,6,8,10]
+    capacity = [2, 4, 6, 8, 10]
     player1 = Person("은서", random.choice(capacity)) #주량 2,4,6,8,10 중 랜덤선택
     player2 = Person("하연", random.choice(capacity))
     player3 = Person("연서", random.choice(capacity))
@@ -148,7 +146,7 @@ def main_game():
 
     players = [player1, player2, player3, player4, player5]
     opponents = random.sample(players, k = num_players())
-    
+
     #4-2. 게임 멤버들 소개
     for opponent in opponents:
         print(f"오늘 함께 취할 친구는 {opponent.name}입니다! (치사량 : {opponent.max_alcohol})")
@@ -161,7 +159,7 @@ def main_game():
     # 마신 잔 수 및 치사량 출력    
     for gamer in gamers:
         print(gamer.drink(0))
-    
+
     #4-3. 게임 리스트 출력
     show_game_list()    
     
@@ -169,7 +167,7 @@ def main_game():
     # 게임 선택 및 실행
     while True:
         # 게이머들 지정
-        starter = gamers[0] # 게임 시작하는 사람
+        starter = gamers[0]  # 게임 시작하는 사람
 
         # 게임 시작!
         game = Game(gamers)
@@ -178,30 +176,27 @@ def main_game():
         # 게임 후 플레이어들 마신 잔 수 및 남은 잔 수 출력
         for gamer in gamers:
             print(gamer.drink(0))
-            print(gamer.drinks_left())
 
         # 죽은 사람 있는지 확인
         for gamer in gamers:
-            if gamer.drinks_left() == 0:
+            if gamer.is_intoxicated():
                 print("__________________________________________")
                 print("______________GAME OVER____________________")
                 print("__________________________________________")
                 print(f"{gamer.name}이(가) 전사했습니다... 꿈나라에서는 편히 쉬시길..zzz")
                 sys.exit()
-            # 한판 더 할건지 여부 물어보기
-            else:
-                show_game_list()
-                print('술게임 진행중! 다른 사람의 턴입니다. 그만하고 싶으면 "exit"을, 계속하고 싶으면 아무키나 입력해 주세요!:  ', end = "")
-                end_yn = input().strip().lower()
-                if end_yn == "exit":
-                    print("즐거운 게임이었습니다!!!!")
-                    sys.exit()
-                else:
-                    # 다음 플레이어 설정
-                    next_player_index = random.randint(1,len(gamers)-1)
-                    starter = gamers.pop(next_player_index)
-                    gamers.insert(0,starter)
-                    break
+        # 한판 더 할건지 여부 물어보기
+        show_game_list()
+        print('술게임 진행중! 다른 사람의 턴입니다. 그만하고 싶으면 "exit"을, 계속하고 싶으면 아무키나 입력해 주세요!:  ', end="")
+        end_yn = input().strip().lower()
+        if end_yn == "exit":
+            print("즐거운 게임이었습니다!!!!")
+            sys.exit()
+        else:
+            # 다음 플레이어 설정
+            next_player_index = random.randint(1, len(gamers) - 1)
+            starter = gamers.pop(next_player_index)
+            gamers.insert(0, starter)
 
 if __name__ == "__main__":
     main_game()
