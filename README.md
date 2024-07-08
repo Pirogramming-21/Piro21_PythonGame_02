@@ -57,7 +57,7 @@ player의 차례임을 print → 조건에 맞는 입력인지 확인하기(whil
 ### 1. 컴퓨터 플레이어
 
 `auto_move` : 컴퓨터 사용자가 자동으로 숫자를 말하도록 설정
-`lgenerate_incorrect_response` : 컴퓨터 사용자가 10%의 확률로 게임에서 질 수 있도록 설정 
+`generate_incorrect_response` : 컴퓨터 사용자가 10%의 확률로 게임에서 질 수 있도록 설정 
 
 ### 2. 게임 진행 로직
 
