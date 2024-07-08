@@ -1,5 +1,5 @@
 import random, sys
-import up_and_down_game, imground_game, subway_game
+import up_and_down_game, imground_game, subway_game, _369_game
 
 # 사람 클래스 패키지
 class Person:
