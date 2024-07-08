@@ -14,7 +14,7 @@ def play_apart(players):
     
     num_players = len(players)
     num_turns = num_players * 2
-    random_floor = random.randint(1, 30) 
+    random_floor = random.randint(1, len(players)*2) 
     print(f"{random_floor} 층!")
 
     turns = players * 2

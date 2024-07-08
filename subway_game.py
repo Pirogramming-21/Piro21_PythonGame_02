@@ -55,7 +55,7 @@ def play_subway(players:list):
     if start_player.is_user:
         while True:
             try:
-                line_num = int(input("원하는 호선은? (1~4 숫자로 입력하기)"))
+                line_num = int(input("원하는 호선은? (1~4 숫자로 입력하기)    "))
                 if 1<=line_num<=4:
                     break
                 else:
