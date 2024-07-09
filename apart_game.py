@@ -10,12 +10,14 @@ def play_apart(players):
     print("  /__/    \__\ |__|    /__/    \__\|__|  \__\   |__|        ")
     print("                                                            ")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    print("~~~~~~~~~~~~~~아파트! 아파트! 아파트! 아파트!~~~~~~~~~~~~~~~")
+    print("            🏢 아파트! 아파트! 아파트! 아파트! 🏢")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     
     num_players = len(players)
     num_turns = num_players * 2
     random_floor = random.randint(1, len(players)*2) 
     print(f"{random_floor} 층!")
+    print("-------------------")
 
     turns = players * 2
     random.shuffle(turns)
@@ -46,7 +48,9 @@ def play_apart(players):
                     print(f"{player.name}, 몇 층?: {floor}")
                 
                 if floor == random_floor:
-                    print(f"{player.name} 벌칙 당첨!")
+                    print("--------------------------------")
+                    print(f"🤪 {player.name} 벌칙 당첨! 🤪")
+                    print("--------------------------------")
                     player.drink(1)
                     return
                 

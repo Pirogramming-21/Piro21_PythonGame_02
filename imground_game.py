@@ -42,14 +42,15 @@ def play_imground(players):
     print("            |_____|    \_/  \_|_|  \_|     \____| |_|  \_\  \___/  \_____/  |__| \__| |_____/               ")
     print("                                                                                                            ")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    print("아이엠~그라운드~ 지금부터 시작!")
+    print("                                       아이엠~그라운드~ 지금부터 시작!")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print_players()
 
     current = 0
 
     while True:
         current_name = players[current].name
-        print(f"\n지목 순서: {current_name}")
+        print(f"\n 🙋 지목 순서: {current_name}")
 
         if current_name == solo_name:
             input_line = input("지목할 사람의 이름과 횟수를 입력하세요(예: 이름 2): ").strip()
@@ -85,25 +86,27 @@ def play_imground(players):
             target_name, count = random_name_and_count(current_name)
             print(f"지목할 사람의 이름과 횟수를 입력하세요(예: 이름 2): {target_name} {count}")
 
-        print(f"이름을 4박자에 맞춰 외쳐야 합니다.")
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print(f"(이름을 4박자에 맞춰 외쳐야 합니다.)")
 
         if target_name != solo_name:
             if random.randint(1, 10) <= 7:
                 input_sequence = random_clap_name(target_name, count)
             else:
                 input_sequence = random_clap_name_incorrect(target_name, count)
-            print(f"현재 순서: {input_sequence}")
+            print(f": {input_sequence}")
         else:
             print(f"4박자에 맞춰 이름을 외쳐주세요 (예: 짝 짝 이름 이름):")
             input_sequence = input().strip()
 
         if not check_name_repetition(target_name, count, input_sequence):
-            print(f"박자는 생명~ 박자는 생명~ {target_name} 벌칙 당첨!")
+            print(f"📣 박자는 생명~ 박자는 생명~ {target_name} 벌칙 당첨! 📣")
             target_player_index, _ = get_next_player(target_name)
             players[target_player_index].drink(1)
             return
 
-        print(f"{target_name}가 올바르게 이름을 외쳤습니다.")
+        print(f"⭕ {target_name}가 올바르게 이름을 외쳤습니다. ⭕")
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         current, _ = get_next_player(target_name)
         
         if current == -1:
